@@ -1,23 +1,29 @@
-//
-//  ViewController.swift
-//  LAFramework
-//
-//  Created by Mayur Bendale on 16/12/23.
-//
-
 import LocalAuthentication
 import UIKit
 
 class ViewController: UIViewController {
-
-    @IBOutlet private weak var secretMessage: UILabel!
+    @IBOutlet private weak var secretMessageLabel: UILabel!
 
     @IBAction private func authenticate(_ sender: UIButton) {
         let context = LAContext()
         var error: NSError?
 
+        //You can use .deviceOwnerAuthentication to allow fallback to the device passcode
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Identify yourself!"
+            switch context.biometryType {
+            case .faceID:
+                print("Face ID is available.")
+            case .touchID:
+                print("Touch ID is available.")
+            case .none:
+                print("No biometric authentication is available.")
+            default:
+                print("Unknown biometric type.")
+            }
+
+            let reason = "Authenticate to access secure data"
+            context.localizedFallbackTitle = "Enter Passcode"
+                context.localizedCancelTitle = "Cancel Authentication"
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { [weak self] success, authenticateError in
                 DispatchQueue.main.async {
                     if success {
@@ -59,7 +65,6 @@ class ViewController: UIViewController {
     }
 
     private func unlockSecretMessage() {
-        secretMessage.text = "Hello"
+        secretMessageLabel.text = "Hello"
     }
 }
-
