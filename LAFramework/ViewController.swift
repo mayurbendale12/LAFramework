@@ -23,7 +23,7 @@ class ViewController: UIViewController {
 
             let reason = "Authenticate to access secure data"
             context.localizedFallbackTitle = "Enter Passcode"
-                context.localizedCancelTitle = "Cancel Authentication"
+            context.localizedCancelTitle = "Cancel Authentication"
             context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { [weak self] success, authenticateError in
                 DispatchQueue.main.async {
                     if success {
